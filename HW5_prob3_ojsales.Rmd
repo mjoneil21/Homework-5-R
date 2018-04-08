@@ -74,6 +74,57 @@ You should at least try the following two techniques:
 - logistic regression
 - a simple decision tree
 
+
+```{r}
+library(caret)
+library(caretEnsemble)
+library(ggplot2)
+library(e1071)
+library(randomForest)
+```
+
+
+```{r}
+str(ojsales_train)
+```
+
+```{r}
+summary(ojsales_train)
+```
+Logrithmic Model
+
+```{r}
+Logmodel1 <- glm(formula = MM ~DiscMM + StoreID + StoreID*PriceDiff + LoyalCH + PctDiscMM + PriceDiff, family = binomial, data = ojsales_train)
+```
+
+
+```{r}
+summary(Logmodel1)
+```
+
+
+```{r}
+Prob_log <- predict(Logmodel1, newdata=ojsales_train, type="response")
+yhat_dLogM <- (Logmodel1$fit > 0.5) * 1
+Yhat_fact <- as.factor(yhat_dLogM)
+CMlog <- confusionMatrix(Yhat_fact, ojsales_train$MM, positive = "1")
+CMlog
+```
+
+
+This was really bizare, I was going through the logistic Regression Food Stmps notes like you suggested and whenever I tried to load my predicted values into the confusion matrix it would say that the MM values and the Yhat values were on different levels. When I used the "Levels" function on the yhat values I got a null value returned. So forcing the Yhat values into an as.factor function fixed it. 
+
+
+
+
+```{r}
+Prob_testlog <- predict(Logmodel1, newdata=ojsales_test, type="response")
+yhat_dLogMtest <- (Prob_testlog > 0.5) *1
+Yhat_facttest <- as.factor(yhat_dLogMtest)
+CMlogtest <- confusionMatrix(Yhat_facttest, ojsales_test$MM, positive = "1")
+CMlogtest
+```
+
 **HACKER EXTRA:** Try additional techniques such as random forest, k-nearest 
 neighbor or others.
 
