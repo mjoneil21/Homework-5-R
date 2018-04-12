@@ -108,8 +108,8 @@ summary(Logmodel1)
 Prob_log <- predict(Logmodel1, newdata=ojsales_train, type="response")
 yhat_dLogM <- (Logmodel1$fit > 0.5) * 1
 Yhat_fact <- as.factor(yhat_dLogM)
-CMlog <- confusionMatrix(Yhat_fact, ojsales_train$MM, positive = "1")
-CMlog
+cmlog <- confusionMatrix(Yhat_fact, ojsales_train$MM, positive = "1")
+cmlog
 ```
 
 
@@ -122,9 +122,39 @@ This was really bizare, I was going through the logistic Regression Food Stmps n
 Prob_testlog <- predict(Logmodel1, newdata=ojsales_test, type="response")
 yhat_dLogMtest <- (Prob_testlog > 0.5) *1
 Yhat_facttest <- as.factor(yhat_dLogMtest)
-CMlogtest <- confusionMatrix(Yhat_facttest, ojsales_test$MM, positive = "1")
-CMlogtest
+cmlogtest <- confusionMatrix(Yhat_facttest, ojsales_test$MM, positive = "1")
+cmlogtest
 ```
+Simple Decision Tree
+
+```{r}
+tree <- rpart(MM ~ StoreID + PriceMM + PriceDiff + LoyalCH, data=ojsales_train, method="class")
+tree
+rpart.plot(tree)
+```
+
+```{r}
+head(predict(tree))
+
+head(predict(tree, type="class"))
+```
+
+```{r}
+cmtree <- caret::confusionMatrix(predict(tree, type="class"), 
+                       ojsales_train$MM, positive = "1")
+cmtree
+```
+
+```{r}
+tree.pred <- predict(tree, ojsales_test, type = "class")
+```
+
+```{r}
+cmtree2 <- confusionMatrix(tree.pred, ojsales_test$MM, positive = "1")
+cmtree2
+```
+
+
 
 **HACKER EXTRA:** Try additional techniques such as random forest, k-nearest 
 neighbor or others.
