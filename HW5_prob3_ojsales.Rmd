@@ -81,6 +81,7 @@ library(caretEnsemble)
 library(ggplot2)
 library(e1071)
 library(randomForest)
+library(VIF)
 ```
 
 
@@ -94,7 +95,7 @@ summary(ojsales_train)
 Logrithmic Model
 
 ```{r}
-Logmodel1 <- glm(formula = MM ~DiscMM + StoreID + StoreID*PriceDiff + LoyalCH + PctDiscMM + PriceDiff, family = binomial, data = ojsales_train)
+Logmodel1 <- glm(formula = MM ~ StoreID + PriceMM + PriceDiff + StoreID*PriceMM + LoyalCH, family = binomial, data = ojsales_train)
 ```
 
 
