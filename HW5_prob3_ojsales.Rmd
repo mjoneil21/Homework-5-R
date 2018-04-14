@@ -82,6 +82,9 @@ library(ggplot2)
 library(e1071)
 library(randomForest)
 library(VIF)
+library(rpart)
+library(rpart.plot)
+library(dplyr)
 ```
 
 
@@ -92,7 +95,7 @@ str(ojsales_train)
 ```{r}
 summary(ojsales_train)
 ```
-Logrithmic Model
+# Logrithmic Model
 
 ```{r}
 Logmodel1 <- glm(formula = MM ~ StoreID + PriceMM + PriceDiff + StoreID*PriceMM + LoyalCH, family = binomial, data = ojsales_train)
@@ -125,7 +128,7 @@ Yhat_facttest <- as.factor(yhat_dLogMtest)
 cmlogtest <- confusionMatrix(Yhat_facttest, ojsales_test$MM, positive = "1")
 cmlogtest
 ```
-Simple Decision Tree
+# Simple Decision Tree
 
 ```{r}
 tree <- rpart(MM ~ StoreID + PriceMM + PriceDiff + LoyalCH, data=ojsales_train, method="class")
@@ -153,6 +156,34 @@ tree.pred <- predict(tree, ojsales_test, type = "class")
 cmtree2 <- confusionMatrix(tree.pred, ojsales_test$MM, positive = "1")
 cmtree2
 ```
+
+# Bootstrap Aggregation
+
+
+```{r}
+oj.bag <- randomForest(MM ~ StoreID + PriceCH + PriceMM + DiscCH + DiscMM + SpecialCH + SpecialMM + LoyalCH + SalePriceMM + SalePriceCH + PriceDiff + PctDiscMM + PctDiscCH + ListPriceDiff, data = ojsales_train, mtry=13, importance=TRUE, na.action = na.omit)
+
+oj.bag
+```
+
+```{r}
+oj_imp <- arrange(as.data.frame(oj.bag$importance),MeanDecreaseGini)
+oj_imp$variable <- as.factor(names(oj.bag$importance[,1]))
+oj_imp <- within(oj_imp, variable <- reorder(variable, MeanDecreaseGini))
+ggplot(data = oj_imp) + geom_bar(aes(x=variable, y=MeanDecreaseGini), stat = "identity") + coord_flip()
+```
+
+
+
+```{r}
+oj.bag.pred <- predict(oj.bag, ojsales_test, type="class" )
+oj.bag.pred <- confusionMatrix(oj.bag.pred, ojsales_test$MM, positive = "1")
+oj.bag.pred
+```
+
+
+
+
 
 
 
