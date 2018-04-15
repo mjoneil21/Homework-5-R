@@ -180,7 +180,7 @@ oj.bag.pred <- predict(oj.bag, ojsales_test, type="class" )
 oj.bag.pred <- caret::confusionMatrix(oj.bag.pred, ojsales_test$MM, positive = "1")
 oj.bag.pred
 ```
-
+# Random Forest
 
 
 
