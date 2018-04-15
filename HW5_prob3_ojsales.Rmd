@@ -161,7 +161,7 @@ cmtree2
 
 
 ```{r}
-oj.bag <- randomForest(MM ~ StoreID + PriceCH + PriceMM + DiscCH + DiscMM + SpecialCH + SpecialMM + LoyalCH + SalePriceMM + SalePriceCH + PriceDiff + PctDiscMM + PctDiscCH + ListPriceDiff, data = ojsales_train, mtry=13, importance=TRUE, na.action = na.omit)
+oj.bag <- randomForest(MM ~ StoreID + PriceCH + PriceMM + DiscCH + DiscMM + SpecialCH + SpecialMM + LoyalCH + SalePriceMM + SalePriceCH + PriceDiff + PctDiscMM + PctDiscCH + ListPriceDiff, data = ojsales_train, mtry=14, importance=TRUE, na.action = na.omit)
 
 oj.bag
 ```
@@ -182,10 +182,33 @@ oj.bag.pred
 ```
 # Random Forest
 
+```{r}
+oj.rf <- randomForest(MM ~ StoreID + PriceCH + PriceMM + DiscCH + DiscMM + SpecialCH + SpecialMM + LoyalCH + SalePriceMM + SalePriceCH + PriceDiff + PctDiscMM + PctDiscCH + ListPriceDiff, data = ojsales_train, mtry = 4, importance = TRUE, na.action = na.omit)
+```
 
+```{r}
+oj.rf
+```
 
+```{r}
+oj.rf.pred <- predict(oj.rf, ojsales_test, type = "class")
+cm.rf.pred <- caret::confusionMatrix(oj.rf.pred, ojsales_test$MM, positive = "1")
+cm.rf.pred
+```
 
+# Summary
 
+The obvious winner in terms of accuracy here was the logistic model which had a test accuracy score of 90%. That could be caused by a small sample size especially in the test dataset, which in turn causes variance in the preformance metric. I checked the signs of the coeficients and all of them had the expected sign in front of them so multicolinearity was not the culprit. There could be other cuases as well, the point being that the 90% shouldn't be trusted as a reliable score on that model it is more likely that the structure of the data in the test data set played nice with the particular logistic model I made. 
+
+The Bootstrap Aggregation model did the worst out of the four models tried. The simple decision tree and the random forest model tied for 2nd place. The reason the simple decision tree did so well is probably because I was able to decide what variables the tree used while in the random forest the algoritim "decided" which variables were important. 
+
+While I don't completly trust the 90% of the logistic model, statistical methods should not be discounted just becuase there are new black box algorithims competing with them. In many cases a regression model with interaction terms and transformations can beat out a machine learning algorithim. Or an ensemble of regression models can be used to predict a numerical response variable where machine learning would fail. 
+
+## Sensitivity
+Whats interesting here is that even though the simple decision tree had a high predicition score on the confusion matrix, it had the lowest sensitivity score. The Bootstrap Aggregation method came in third while the random forest and logrithmic methods tied for first with a score of .77.
+
+## Accuracy: Training vs. Test
+All of the models had a better test score than trainning score, so the log model is not alone in being able to predict the test dataset better, though it had the most dramatic difference between test and train. This could be cuased by the structual makeup of the test data, the size of the test data, or the size of the overall dataset. 
 
 **HACKER EXTRA:** Try additional techniques such as random forest, k-nearest 
 neighbor or others.
