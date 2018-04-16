@@ -28,6 +28,7 @@ Just run the following chunks to load the dataset, do some data prep and
 then partition the data into training and test sets.
 
 ```{r loaddata}
+library(ISLR)
 ojsales <- (ISLR::OJ)
 ```
 
@@ -85,6 +86,7 @@ library(VIF)
 library(rpart)
 library(rpart.plot)
 library(dplyr)
+library(ISLR)
 ```
 
 
@@ -209,6 +211,9 @@ Whats interesting here is that even though the simple decision tree had a high p
 
 ## Accuracy: Training vs. Test
 All of the models had a better test score than trainning score, so the log model is not alone in being able to predict the test dataset better, though it had the most dramatic difference between test and train. This could be cuased by the structual makeup of the test data, the size of the test data, or the size of the overall dataset. 
+
+## Overfitting
+There was not any evidence of overfitting, in fact, we would have a hard time locating it as all of our test results were better than our train results. Our train results were not overly good, so I can't definitively say we have overfitting.
 
 **HACKER EXTRA:** Try additional techniques such as random forest, k-nearest 
 neighbor or others.
