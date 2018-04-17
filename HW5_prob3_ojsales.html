@@ -318,7 +318,8 @@ $(document).ready(function () {
 <div id="data-prep" class="section level2">
 <h2>Data prep</h2>
 <p>We’ll do a little data prep to set things up so that we are trying to predict whether or not the customer purchased Minute Maid (vs Citrus Hill.) Just run the following chunks to load the dataset, do some data prep and then partition the data into training and test sets.</p>
-<pre class="r"><code>ojsales &lt;- (ISLR::OJ)</code></pre>
+<pre class="r"><code>library(ISLR)
+ojsales &lt;- (ISLR::OJ)</code></pre>
 <p>Clean up the storeid related fields. Drop Store7 field.</p>
 <pre class="r"><code>ojsales$StoreID &lt;- as.factor(ojsales$StoreID)
 
@@ -373,6 +374,7 @@ library(dplyr)</code></pre>
 <pre><code>## The following objects are masked from 'package:base':
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(ISLR)</code></pre>
 <pre class="r"><code>str(ojsales_train)</code></pre>
 <pre><code>## 'data.frame':    963 obs. of  15 variables:
 ##  $ MM           : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 2 1 1 1 1 1 1 1 ...
@@ -725,6 +727,10 @@ cm.rf.pred</code></pre>
 <div id="accuracy-training-vs.test" class="section level2">
 <h2>Accuracy: Training vs. Test</h2>
 <p>All of the models had a better test score than trainning score, so the log model is not alone in being able to predict the test dataset better, though it had the most dramatic difference between test and train. This could be cuased by the structual makeup of the test data, the size of the test data, or the size of the overall dataset.</p>
+</div>
+<div id="overfitting" class="section level2">
+<h2>Overfitting</h2>
+<p>There was not any evidence of overfitting, in fact, we would have a hard time locating it as all of our test results were better than our train results. Our train results were not overly good, so I can’t say we have overfitting.</p>
 <p><strong>HACKER EXTRA:</strong> Try additional techniques such as random forest, k-nearest neighbor or others.</p>
 <p>Then use the <code>predict()</code> function to make classification predictions on the test dataset and use <code>caret::confusionMatrix</code> to create a confusion matrix for each of the models for the predictions.</p>
 <p>Summarize your results. - Which technique performed the best in terms of overall accuracy? - Which technique had the best sensitivity score? - How did accuracy differ for the training and test datasets for each model? - Is their any evidence of overfitting?</p>
